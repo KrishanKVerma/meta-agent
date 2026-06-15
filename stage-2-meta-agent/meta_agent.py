@@ -30,11 +30,6 @@ print("\n=== META-AGENT DESIGNED THIS TEAM ===")
 for r in roles:
     print("-", r)
 
-    
-print("Parsed roles:")
-for r in roles:
-    print("-",r)
-
 
 print("\n=== DEBATE ===")
 all_arguments = ""
