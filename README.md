@@ -38,6 +38,11 @@ Stage 2 always built a debate. Stage 3 goes further: it reads the task and **pic
 
 The evolution: from *an agent that builds debate teams* to *an agent that picks and builds the right kind of agent system for any task*.
 
+### `stage-4-harness/` — self-verification
+The system that checks its own output before it ships. The Reliability Harness takes any agent's output and scores it **TRUSTWORTHY** or **UNTRUSTWORTHY** — checking whether it's factually grounded, internally consistent, and free of contradictions. Wired to the meta-agent, it verifies its own generated output and flags anything that should be regenerated or escalated to a human.
+
+This is the step most "AI agent" projects skip: knowing when *not* to trust the output.
+
 ---
 
 ## How it works
@@ -68,6 +73,7 @@ python foundations/agent.py
 python stage-1-devils-advocate/devils_advocate.py
 python stage-2-meta-agent/meta_agent.py
 python stage-3-generalized/meta_agent_v2.py
+python stage-4-harness/reliability_harness.py
 ```
 
 ---
