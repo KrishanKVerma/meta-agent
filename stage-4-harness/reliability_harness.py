@@ -25,23 +25,42 @@ def verify_output(agent_output):
     verdict = check.strip().split("\n")[0].strip().upper()
     return verdict , check
 
-task = input("Ask the meta-agent something: ")
 
-verdict_text = ask_agent(
-    "You are an expert. Answer this clearly and concisely.",
-    task
-)
+def check_groundedness(source , agent_output):
+    result = ask_agent(
+        "You are a groundedness checker. You are given a SOURCE and an AI agent's OUTPUT. Determine whether every claim in the output is supported by the source. Respond with exactly one word on the first line: GROUNDED (every claim is supported by the source) or UNGROUNDED (the output adds claims not in the source). Then a one-sentence reason.",
+        f"SOURCE:\n{source}\n\nOUTPUT:\n{agent_output}"
+    )
+    verdict = result.strip().split("\n")[0].strip().upper()
+    return verdict , result   
+
+
+def reliability_report(agent_output, source=None):
+    print("\n=== RELIABILITY HARNESS ===")
+
+    trust_verdict, _ = verify_output(agent_output)
+    print(f"[1] Trust:        {trust_verdict}")
+
+    ground_verdict = "N/A"
+    if source:
+        ground_verdict, _ = check_groundedness(source, agent_output)
+        print(f"[2] Groundedness: {ground_verdict}")
+
+    passed = (trust_verdict == "TRUSTWORTHY") and (ground_verdict in ["GROUNDED", "N/A"])
+    print(f"\nOVERALL: {'✅ PASSED' if passed else '⚠️  FLAGGED — regenerate or escalate'}")
+    return passed
+
+task = input("Ask the meta-agent something: ")
+verdict_text = ask_agent("You are an expert. Answer this clearly and concisely.", task)
 
 print("\n=== META-AGENT OUTPUT ===")
 print(verdict_text)
 
-reliability_verdict, reliability_report = verify_output(verdict_text)
+reliability_report(verdict_text) 
 
-print("\n=== RELIABILITY HARNESS ===")
-print(f"Trust verdict: {reliability_verdict}")
-print(reliability_report)
 
-if reliability_verdict == "UNTRUSTWORTHY":
-    print("\n⚠️  Output flagged — would regenerate or escalate to human.")
-else:
-    print("\n✅ Output passed reliability check.")
+source = "The Eiffel Tower is in Paris and was completed in 1889."
+print("\n[demo: grounded output]")
+reliability_report("The Eiffel Tower is located in Paris.", source=source)
+print("\n[demo: ungrounded output]")
+reliability_report("The Eiffel Tower is in Paris and is 450 meters tall.", source=source)

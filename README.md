@@ -36,10 +36,13 @@ Stage 2 always built a debate. Stage 3 goes further: it reads the task and **pic
 - **PIPELINE** — for multi-step tasks: breaks the task into sequential steps, executes each building on the last
 - **SINGLE** — for simple questions: routes to one expert for a direct answer
 
-The evolution: from *an agent that builds debate teams* to *an agent that picks and builds the right kind of agent system for any task*.
-
 ### `stage-4-harness/` — self-verification
-The system that checks its own output before it ships. The Reliability Harness takes any agent's output and scores it **TRUSTWORTHY** or **UNTRUSTWORTHY** — checking whether it's factually grounded, internally consistent, and free of contradictions. Wired to the meta-agent, it verifies its own generated output and flags anything that should be regenerated or escalated to a human.
+The system that checks its own output before it ships. The Reliability Harness runs **two checks** and combines them into one pass/flag verdict:
+
+- **Trust** — is the output internally consistent and free of contradictions? (TRUSTWORTHY / UNTRUSTWORTHY)
+- **Groundedness** — does every claim trace back to the given source, with nothing invented? (GROUNDED / UNGROUNDED)
+
+Wired to the meta-agent, it verifies generated output and flags anything that should be regenerated or escalated to a human.
 
 This is the step most "AI agent" projects skip: knowing when *not* to trust the output.
 
