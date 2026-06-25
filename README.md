@@ -46,6 +46,8 @@ Wired to the meta-agent, it verifies generated output and flags anything that sh
 
 This is the step most "AI agent" projects skip: knowing when *not* to trust the output.
 
+**Evaluation.** The harness is measured against a labeled test set (`eval_harness.py`), not just assumed to work. The honest finding: it reliably catches **category errors** (clearly false claims), but **misses near-miss numeric errors** (e.g. a date or measurement that's only slightly off) and is **non-deterministic on popular misconceptions** — accuracy ranges from 62% to 87% across runs. Knowing exactly where a verifier is weak is the point of evaluating it; that's what the next iteration targets.
+
 ---
 
 ## How it works

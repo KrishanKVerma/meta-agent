@@ -50,17 +50,18 @@ def reliability_report(agent_output, source=None):
     print(f"\nOVERALL: {'✅ PASSED' if passed else '⚠️  FLAGGED — regenerate or escalate'}")
     return passed
 
-task = input("Ask the meta-agent something: ")
-verdict_text = ask_agent("You are an expert. Answer this clearly and concisely.", task)
 
-print("\n=== META-AGENT OUTPUT ===")
-print(verdict_text)
+if __name__ == "__main__":
+    task = input("Ask the meta-agent something: ")
+    verdict_text = ask_agent("You are an expert. Answer this clearly and concisely.", task)
 
-reliability_report(verdict_text) 
+    print("\n=== META-AGENT OUTPUT ===")
+    print(verdict_text)
 
+    reliability_report(verdict_text)
 
-source = "The Eiffel Tower is in Paris and was completed in 1889."
-print("\n[demo: grounded output]")
-reliability_report("The Eiffel Tower is located in Paris.", source=source)
-print("\n[demo: ungrounded output]")
-reliability_report("The Eiffel Tower is in Paris and is 450 meters tall.", source=source)
+    source = "The Eiffel Tower is in Paris and was completed in 1889."
+    print("\n[demo: grounded output]")
+    reliability_report("The Eiffel Tower is located in Paris.", source=source)
+    print("\n[demo: ungrounded output]")
+    reliability_report("The Eiffel Tower is in Paris and is 450 meters tall.", source=source)
