@@ -46,7 +46,7 @@ Wired to the meta-agent, it verifies generated output and flags anything that sh
 
 This is the step most "AI agent" projects skip: knowing when *not* to trust the output.
 
-**Evaluation.** The harness is measured against a labeled test set (`eval_harness.py`), not just assumed to work. The honest finding: it reliably catches **category errors** (clearly false claims), but **misses near-miss numeric errors** (e.g. a date or measurement that's only slightly off) and is **non-deterministic on popular misconceptions** — accuracy ranges from 62% to 87% across runs. Knowing exactly where a verifier is weak is the point of evaluating it; that's what the next iteration targets.
+**Evaluation.** The harness is measured against a labeled test set (`eval_harness.py`) — and not just for accuracy, but for *consistency*. Each case is run 3× to see whether the LLM-based verifier even agrees with itself. Cases sort into three buckets: **stable-correct** (caught reliably), **stable-wrong** (a true blind spot — missed every run), and **non-deterministic** (different verdict across identical runs). On the current test set: **5 stable-correct, 1 stable-wrong, 2 non-deterministic.** The key finding: an LLM-as-verifier returns contradictory verdicts on borderline cases — so "did it pass?" can depend on which run you look at. Measuring that instability is the point; a verifier you can't trust to be consistent is a verifier you have to design around.
 
 ---
 
