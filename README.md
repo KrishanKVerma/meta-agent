@@ -65,8 +65,12 @@ Finding: an LLM-based verifier reliably catches obvious errors but has reproduci
 ---
 
 ## How it works
-task / decision
 
+​```
+task / decision
+...
+reliability harness --> trust + groundedness + consistency --> pass / flag
+​```
 |
 
 v
