@@ -21,6 +21,12 @@ test_set = [
     # --- correct technical statements (false-positive test) ---
     ("RAG combines retrieval with generation to ground LLM outputs in external data.", "TRUSTWORTHY"),
     ("Vector embeddings represent text as points in high-dimensional space.", "TRUSTWORTHY"),
+
+    # --- borderline misconceptions (the non-determinism zone) ---
+    ("Albert Einstein won the Nobel Prize for his theory of relativity.", "UNTRUSTWORTHY"),
+    ("The Amazon rainforest produces 20% of the world's oxygen.", "UNTRUSTWORTHY"),
+    ("Humans only use 10% of their brains.", "UNTRUSTWORTHY"),
+    ("Goldfish have a 3-second memory.", "UNTRUSTWORTHY"),
 ]
 
 RUNS = 3

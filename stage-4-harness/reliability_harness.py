@@ -35,7 +35,7 @@ def check_groundedness(source , agent_output):
     return verdict , result   
 
 
-def reliability_report(agent_output, source=None):
+def reliability_report(agent_output, source=None, question=None):
     print("\n=== RELIABILITY HARNESS ===")
 
     trust_verdict, _ = verify_output(agent_output)
@@ -46,10 +46,33 @@ def reliability_report(agent_output, source=None):
         ground_verdict, _ = check_groundedness(source, agent_output)
         print(f"[2] Groundedness: {ground_verdict}")
 
-    passed = (trust_verdict == "TRUSTWORTHY") and (ground_verdict in ["GROUNDED", "N/A"])
+    consist_verdict = "N/A"
+    if question:
+        consist_verdict, _, _ = check_consistency(question)
+        print(f"[3] Consistency:  {consist_verdict}")
+
+    passed = (
+        trust_verdict == "TRUSTWORTHY"
+        and ground_verdict in ["GROUNDED", "N/A"]
+        and consist_verdict in ["CONSISTENT", "N/A"]
+    )
     print(f"\nOVERALL: {'✅ PASSED' if passed else '⚠️  FLAGGED — regenerate or escalate'}")
     return passed
 
+
+def check_consistency(question , runs = 3):
+    answers = []
+    for _ in range(runs):
+        ans = ask_agent("You are an expert. Answer concisely in one sentence.", question)
+        answers.append(ans.strip())
+
+    joined = "\n---\n".join(f"Answer  {i+1}: {a}" for i, a in enumerate(answers))
+    check = ask_agent(
+        "You are given multiple answers the same AI gave to the SAME question. Judge whether they are CONSISTENT (all say the same thing) or INCONSISTENT (they disagree or contradict). Respond with exactly one word on the first line: CONSISTENT or INCONSISTENT. Then a one-sentence reason.",
+        f"QUESTION: {question}\n\n{joined}"
+    )
+    verdict = check.strip().split("\n")[0].strip().upper()
+    return verdict, answers, check  
 
 if __name__ == "__main__":
     task = input("Ask the meta-agent something: ")
@@ -58,10 +81,13 @@ if __name__ == "__main__":
     print("\n=== META-AGENT OUTPUT ===")
     print(verdict_text)
 
-    reliability_report(verdict_text)
+    reliability_report(verdict_text, question=task)
 
     source = "The Eiffel Tower is in Paris and was completed in 1889."
     print("\n[demo: grounded output]")
     reliability_report("The Eiffel Tower is located in Paris.", source=source)
     print("\n[demo: ungrounded output]")
     reliability_report("The Eiffel Tower is in Paris and is 450 meters tall.", source=source)
+    print("\n=== CONSISTENCY CHECK ===")
+    print("Factual Q (should be consistent):", check_consistency("What is the capital of France?")[0])
+    print("Ambiguous Q (may vary):", check_consistency("What is the best programming language?")[0])

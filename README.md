@@ -41,6 +41,7 @@ The system that checks its own output before it ships. The Reliability Harness r
 
 - **Trust** — is the output internally consistent and free of contradictions? (TRUSTWORTHY / UNTRUSTWORTHY)
 - **Groundedness** — does every claim trace back to the given source, with nothing invented? (GROUNDED / UNGROUNDED)
+- **Consistency** — ask the same question several times; do the answers agree, or does the model contradict itself? (CONSISTENT / INCONSISTENT)
 
 Wired to the meta-agent, it verifies generated output and flags anything that should be regenerated or escalated to a human.
 
