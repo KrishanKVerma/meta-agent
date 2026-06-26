@@ -65,31 +65,27 @@ Finding: an LLM-based verifier reliably catches obvious errors but has reproduci
 ---
 
 ## How it works
-
-​```
 task / decision
-...
-reliability harness --> trust + groundedness + consistency --> pass / flag
-​```
-|
 
-v
+│
 
-meta-agent (router) --> picks structure
+▼
 
-|
+meta-agent (router) ── picks structure
 
-|--> DEBATE    -> invents 3 experts -> debate -> verdict
+│
 
-|--> PIPELINE  -> splits into steps -> executes in sequence
+├──► DEBATE    → 3 experts → debate → verdict
 
-|--> SINGLE    -> one expert -> direct answer
+├──► PIPELINE  → steps → executed in sequence
 
-|
+└──► SINGLE    → one expert → direct answer
 
-v
+│
 
-reliability harness --> trust + groundedness + consistency --> pass / flag
+▼
+
+reliability harness → trust + groundedness + consistency → pass / flag
 
 ---
 
