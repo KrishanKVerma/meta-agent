@@ -1,14 +1,26 @@
 from reliability_harness import ask_agent, verify_output
 
 test_set = [
-    ("The Eiffel Tower was completed in 1887.", "UNTRUSTWORTHY"),
-    ("Mount Everest is the tallest mountain at 8,000 meters.", "UNTRUSTWORTHY"),
-    ("The human body has 211 bones.", "UNTRUSTWORTHY"),
-    ("Light travels at about 300,000 km per hour.", "UNTRUSTWORTHY"),
-    ("The Great Wall of China is visible from space with the naked eye.", "UNTRUSTWORTHY"),
-    ("Goldfish have a memory span of only 3 seconds.", "UNTRUSTWORTHY"),
-    ("Albert Einstein won the Nobel Prize for his theory of relativity.", "UNTRUSTWORTHY"),
-    ("The Amazon rainforest produces 20% of the world's oxygen.", "UNTRUSTWORTHY"),
+    # --- grounded factual claims with source context (RAG-style) ---
+    ("Based on the Q3 report, revenue grew 23% year-over-year to $4.2M.", "UNTRUSTWORTHY"),  # unverifiable without source
+    ("The API rate limit is 100 requests per minute per API key.", "TRUSTWORTHY"),
+
+    # --- numerical precision (the blind spot) ---
+    ("The model was trained on 1.2 trillion tokens over 14 days.", "UNTRUSTWORTHY"),
+    ("HTTP status code 404 indicates a server-side error.", "UNTRUSTWORTHY"),  # it's client-side
+
+    # --- plausible-but-wrong technical claims (where agents hallucinate) ---
+    ("In Python, lists are immutable and tuples are mutable.", "UNTRUSTWORTHY"),  # reversed
+    ("PostgreSQL is a NoSQL database optimized for document storage.", "UNTRUSTWORTHY"),  # it's relational
+    ("The transformer architecture was introduced in the paper 'Attention Is All You Need'.", "TRUSTWORTHY"),
+
+    # --- reasoning/consistency (popular misconceptions) ---
+    ("Adding more agents to a multi-agent system always improves output quality.", "UNTRUSTWORTHY"),
+    ("A higher temperature setting makes an LLM's output more deterministic.", "UNTRUSTWORTHY"),  # reversed
+
+    # --- correct technical statements (false-positive test) ---
+    ("RAG combines retrieval with generation to ground LLM outputs in external data.", "TRUSTWORTHY"),
+    ("Vector embeddings represent text as points in high-dimensional space.", "TRUSTWORTHY"),
 ]
 
 RUNS = 3
