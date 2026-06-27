@@ -3,7 +3,6 @@
 **An agent that builds agents — and a harness that checks whether it can be trusted.**
 
 This project is a study in *oversight* of agentic systems. One half generates: a meta-agent that reads a task, designs the right team of expert agents, and runs them. The other half verifies: a reliability harness that takes generated output and asks whether it is actually trustworthy. Built from scratch in Python, stage by stage. **meta-agent v1 is complete.**
-
 ---
 
 ## What this investigates
@@ -66,20 +65,19 @@ Finding: an LLM-based verifier reliably catches obvious errors but has reproduci
 
 ## How it works
 
-​```
+```
 task / decision
-       |
-       v
+       │
+       ▼
   meta-agent (router) ── picks structure
        │
-       ├── DEBATE    → 3 experts → debate → verdict
-       ├── PIPELINE  → steps → executed in sequence
-       └── SINGLE    → one expert → direct answer
+       ├──► DEBATE    → 3 experts → debate → verdict
+       ├──► PIPELINE  → steps → executed in sequence
+       └──► SINGLE    → one expert → direct answer
        │
-       v
+       ▼
   reliability harness → trust + groundedness + consistency → pass / flag
-
----
+```
 
 ## Run it
 
@@ -107,7 +105,7 @@ This is a v1 study, and naming its limits is part of the work:
 - **The harness trusts well-formed text.** Fluent, confident output reads as trustworthy even when it's wrong — format is not truth. This remains the core open problem.
 - **LLM-based verification inherits the failures it's meant to catch.** The verifier is itself an LLM, so it shares the same blind spots — most visibly on subtle, near-miss errors.
 
-**Solved in v1: the unverifiable-claim blind spot.** The eval found that claims with no source (e.g. a revenue figure) passed as "trustworthy" every run — the harness guessed instead of admitting ignorance. `verify_grounded()` fixes this: given a claim and a source, it judges *only* against that source and returns **SUPPORTED**, **CONTRADICTED**, or **UNVERIFIABLE**. The harness can now say *"I can't verify this"* instead of defaulting to *"looks fine"* — the difference between a verifier that guesses and one that knows the boundary of its own knowledge.
+**Solved in v1: the unverifiable-claim blind spot.** The eval found that claims with no source (e.g. a revenue figure) passed as "trustworthy" every run — the harness guessed instead of admitting ignorance. `verify_grounded()` fixes this: given a claim and a source, it judges *only* against that source and returns **SUPPORTED**, **CONTRADICTED**, or **UNVERIFIABLE**. The harness can now say *"I can't verify this"* instead of defaulting to *"looks fine."*
 
 **Next:** automatic source retrieval (so the harness can fetch its own grounding rather than being handed it), and extending grounded verification across the full multi-agent pipeline.
 ---
