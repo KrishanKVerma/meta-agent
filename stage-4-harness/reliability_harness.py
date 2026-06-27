@@ -74,6 +74,14 @@ def check_consistency(question , runs = 3):
     verdict = check.strip().split("\n")[0].strip().upper()
     return verdict, answers, check  
 
+def verify_grounded(claim , source):
+    result = ask_agent(
+        "You are a strict fact-checker. You are given a CLAIM and a SOURCE. Judge the claim ONLY using the source — do not use outside knowledge. Respond with exactly one word on the first line: SUPPORTED (the source confirms it), CONTRADICTED (the source disproves it), or UNVERIFIABLE (the source doesn't contain enough information to judge). Then a one-sentence reason.",
+        f"SOURCE:\n{source}\n\nCLAIM:\n{claim}"
+    )
+    verdict = result.strip().split("\n")[0].strip().upper()
+    return verdict , result
+
 if __name__ == "__main__":
     task = input("Ask the meta-agent something: ")
     verdict_text = ask_agent("You are an expert. Answer this clearly and concisely.", task)
@@ -91,3 +99,8 @@ if __name__ == "__main__":
     print("\n=== CONSISTENCY CHECK ===")
     print("Factual Q (should be consistent):", check_consistency("What is the capital of France?")[0])
     print("Ambiguous Q (may vary):", check_consistency("What is the best programming language?")[0])
+    source = "The Eiffel Tower is in Paris and was completed in 1889."
+    print(verify_grounded("The Eiffel Tower is in Paris.", source)[0])           # SUPPORTED
+    print(verify_grounded("The Eiffel Tower was completed in 1887.", source)[0]) # CONTRADICTED
+    print(verify_grounded("The Eiffel Tower is 330 meters tall.", source)[0])    # UNVERIFIABLE
+    
